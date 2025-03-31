@@ -3,6 +3,8 @@ from irsystem import ImageSearchEngine
 from config import Config
 import os
 from datetime import datetime
+import nltk
+nltk.download('stopwords',silent=True)
 
 app = Flask(__name__)
 app.config['APP_NAME'] = "Visual Voyager"

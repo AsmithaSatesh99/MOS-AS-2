@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="image-detail">
+    <div class="image-container">
+        <img src="{{ url_for('serve_image', filename=image.filename) }}" 
+             alt="{{ image.alt_text }}"
+             onerror="this.onerror=null;this.src='{{ image.source_url }}'">
+    </div>
+    
+    <div class="image-meta">
+        <h2>Image Details</h2>
+        
+        <div class="meta-section">
+            <h3>Descriptions</h3>
+            <p><strong>BLIP Caption:</strong> {{ image.caption }}</p>
+            <p><strong>Alt Text:</strong> {{ image.alt_text }}</p>
+        </div>
+        
+        <div class="meta-section">
+            <h3>Technical Info</h3>
+            <p><strong>Filename:</strong> {{ image.filename }}</p>
+            <p><strong>Source:</strong> <a href="{{ image.source_url }}" target="_blank">View original</a></p>
+            <p><strong>Indexed:</strong> {{ image.timestamp }}</p>
+        </div>
+        
+        <a href="{{ url_for('index') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Gallery
+        </a>
+    </div>
+</section>
+{% endblock %}

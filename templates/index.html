@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="gallery-section">
+    <h2>All Images ({{ total_images }})</h2>
+
+    <div class="image-grid">
+        {% for image in images %}
+        <div class="image-card">
+            <img src="{{ url_for('serve_image', filename=image.filename) }}" alt="{{ image.alt_text }}"
+                onerror="this.onerror=null;this.src='{{ image.source_url }}'">
+            <div class="image-annotations">
+                <div class="annotation">
+                    <h3 class="annotation-heading">Alt-Text Description</h3>
+                    <p class="annotation-content">{{ image.alt_text|truncate(100) }}</p>
+                </div>
+                <div class="annotation">
+                    <h3 class="annotation-heading">Computer-Generated Caption</h3>
+                    <p class="annotation-content">{{ image.caption|truncate(100) }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('index', page=page-1) }}" class="page-link">
+            <i class="fas fa-chevron-left"></i> Previous
+        </a>
+        {% endif %}
+
+        <span class="page-info">Page {{ page }} of {{ (total_images / per_page)|round(0, 'ceil')|int }}</span>
+
+        {% if end < total_images %} <a href="{{ url_for('index', page=page+1) }}" class="page-link">
+            Next <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+    </div>
+</section>
+{% endblock %}

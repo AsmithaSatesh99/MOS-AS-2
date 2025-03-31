@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Voyager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="vibrant-header">
+        <div class="header-container">
+            <!-- Left: Branding -->
+            <div class="branding">
+                <a href="{{ url_for('index') }}" class="logo">
+                    <i class="fas fa-binoculars logo-icon"></i>
+                    <span class="logo-text">VISUAL VOYAGER</span>
+                </a>
+            </div>
+    
+            <!-- Center: Search -->
+            <div class="methods-container">
+                <label class="method-label">
+                    <input type="radio" name="search-method" value="vsm" class="method-radio">
+                    <span>VSM</span>
+                </label>
+                <label class="method-label">
+                    <input type="radio" name="search-method" value="bm25" class="method-radio">
+                    <span>BM25</span>
+                </label>
+                <!-- <label class="method-label">
+                    <input type="radio" name="search-method" value="semantic" class="method-radio" checked>
+                    <span>Semantic</span>
+                </label> -->
+            </div>
+            
+            <form class="search-form" action="{{ url_for('search') }}" method="POST">
+                <input type="text" name="query" class="search-input" placeholder="Search images..." required>
+                <!-- Hidden method field will be added by JavaScript -->
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Visual Voyager &copy; {{ now.year }}</p>
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

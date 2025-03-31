@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import nltk
 nltk.download('stopwords',quiet=True)
+nltk.download('wordnet',quiet=True)
 
 app = Flask(__name__)
 app.config['APP_NAME'] = "Visual Voyager"

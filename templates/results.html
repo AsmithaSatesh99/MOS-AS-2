@@ -11,7 +11,7 @@
             <img src="{{ url_for('serve_image', filename=image.filename) }}" alt="{{ image.alt_text }}"
                 onerror="this.onerror=null;this.src='{{ image.source_url }}'">
             <div class="result-info">
-                <p class="score">Score: {{ "%.4f"|format(score) }}</p>
+                <!-- <p class="score">Score: {{ "%.4f"|format(score) }}</p> -->
                 <div class="image-annotations">
                     <div class="annotation">
                         <h3 class="annotation-heading">Alt-Text Description</h3>

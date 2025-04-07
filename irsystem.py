@@ -92,21 +92,47 @@ class ImageSearchEngine:
     #     return self.model.encode(doc_texts, show_progress_bar=True)
 
     def search_vsm(self, query):
-        """Vector Space Model search."""
+        """Vector Space Model search with proper cosine similarity normalization."""
         processed_query = self._prepare_text(query)
-        query_tf_idf = defaultdict(float)
         
-        for term in processed_query:
+        # Calculate query vector (tf-idf weights)
+        query_terms = set(processed_query)  # Get unique terms
+        query_vector = {}
+        query_length = 0.0
+        
+        for term in query_terms:
             if term in self.inverted_index:
+                # Calculate tf-idf for query terms
+                tf = processed_query.count(term) / len(processed_query)
                 df = self.doc_frequency[term]
                 idf = math.log(self.total_images / (df + 1))
-                query_tf_idf[term] = (processed_query.count(term) / len(processed_query)) * idf
+                query_vector[term] = tf * idf
+                query_length += (query_vector[term] ** 2)
         
+        query_length = math.sqrt(query_length)
+        
+        # Normalize query vector
+        if query_length > 0:
+            for term in query_vector:
+                query_vector[term] /= query_length
+        
+        # Calculate document scores
         scores = [0.0] * self.total_images
-        for term, tf_idf in query_tf_idf.items():
+        
+        for term in query_vector:
             if term in self.inverted_index:
                 for doc_id, term_freq in self.inverted_index[term]:
-                    scores[doc_id] += tf_idf * (term_freq / self.doc_lengths[doc_id])
+                    # Calculate tf-idf for document term
+                    tf = term_freq / len(self.processed_texts[doc_id])
+                    df = self.doc_frequency[term]
+                    idf = math.log(self.total_images / (df + 1))
+                    doc_weight = tf * idf
+                    
+                    # Normalize by document length (already precomputed in self.doc_lengths)
+                    if self.doc_lengths[doc_id] > 0:
+                        doc_weight /= self.doc_lengths[doc_id]
+                    
+                    scores[doc_id] += query_vector[term] * doc_weight
         
         ranked_indices = np.argsort(scores)[::-1]
         return [(self.image_metadata[idx], scores[idx]) for idx in ranked_indices if scores[idx] > 0]
